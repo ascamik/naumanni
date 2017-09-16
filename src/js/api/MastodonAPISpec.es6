@@ -62,7 +62,13 @@ export function normalizeResponse(entity, {result: responseBody, ...response}, h
     entities.statuses = Object.keys(entities.statuses).reduce(
       (map, key) => {
         const data = entities.statuses[key]
-        // originalのStatusを作ったhost
+        
+
+        // fix for mastodon v1.6 HTL is stuck at the start
+        if(data.reblog && !data.url ) {
+          data.url = entities.statuses[data.reblog].url
+        }
+				// originalのStatusを作ったhost
         const originalHost = data.url.match(HOST_REX)[1]
         const isOriginal = host === originalHost
 
